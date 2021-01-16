@@ -66,20 +66,29 @@ One note before you delve into your tasks: for each endpoint you are expected to
 8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
 9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
 
-REVIEW_COMMENT
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
+## API Reference
 
-Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
+# Error Handling
+Errors are returned as JSON objects in the following format:
+
+{
+    "success": False,
+    "error": 404,
+    "message":"resource not found"
+}
+
+The API will return two types when request fail:
+1. 404: Not found
+2. 422: Unprocessable
+
+# Endpoints
 
 GET '/categories'
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 - Request Arguments: None
 - Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
+- Example response:
+
 {'1' : "Science",
 '2' : "Art",
 '3' : "Geography",
@@ -87,7 +96,125 @@ GET '/categories'
 '5' : "Entertainment",
 '6' : "Sports"}
 
-```
+GET '\questions?page=<page_number>' 
+- Fetches dictionary of questions with all available categories
+- All questions will be paginated (10 questions per page)
+- Request Arguments: None (You can optionaly add a page number)
+- Example response:
+
+"categories": {
+   "1": "Science", 
+   "2": "Art", 
+   "3": "Geography", 
+   "4": "History", 
+   "5": "Entertainment", 
+   "6": "Sports"
+ }, 
+ "questions": [
+   {
+    "answer": "Brazil", 
+    "category": 6, 
+    "difficulty": 3, 
+    "id": 10, 
+    "question": "Which is the only team to play in every soccer World Cup tournament?"
+   },  
+   {
+    "answer": "Uruguay", 
+    "category": 6, 
+    "difficulty": 4, 
+    "id": 11, 
+    "question": "Which country won the first ever soccer World Cup in 1930?"
+   }
+ ], 
+ "success": true, 
+ "total_questions": 2
+}
+
+DELETE '/questions/<question_id>'
+- Delete the question with the id = question_id from the database
+- Request Arguments: question_id : int
+- Example response :
+
+{
+  "deleted": "24", 
+  "success": true
+}
+
+POST '/questions'
+- Creates a new question in the database
+- Request Arguments: {question:string, answer:string, difficulty:int, category:string}
+- Example response:
+
+{
+  "created": 25, 
+  "success": true
+}
+
+POST 'questions/search'
+- Fetches questions that contains the search term
+- Request Arguments: searchTerm:string
+- Example response:
+
+{
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "Tom Cruise", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 4, 
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 1
+}
+
+GET '/categories/<int:category_id>/questions'
+- Fetches the questions with the corresponding category
+- Request Arguments: category_id :int
+- Example response:
+
+{
+  "current_category": 6, 
+  "questions": [
+    {
+      "answer": "Brazil", 
+      "category": 6, 
+      "difficulty": 3, 
+      "id": 10, 
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }, 
+    {
+      "answer": "Uruguay", 
+      "category": 6, 
+      "difficulty": 4, 
+      "id": 11, 
+      "question": "Which country won the first ever soccer World Cup in 1930?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 2
+}
+
+POST '/quizzes'
+- Fetches random questions corresponding to a specific category
+- Previous questions don't appears again
+- Request Arguments: previous_questions: arr, quiz_category:{id:int, type:string}
+
+{
+  "question": {
+    "answer": "Uruguay", 
+    "category": 6, 
+    "difficulty": 4, 
+    "id": 11, 
+    "question": "Which country won the first ever soccer World Cup in 1930?"
+  }, 
+  "success": true
+}
+
+
+
 
 
 ## Testing
